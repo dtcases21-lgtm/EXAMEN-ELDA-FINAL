@@ -1,0 +1,23 @@
+{
+ "empresa": "AguaClara Distribuciones (ficticia)",
+ "moneda": "MXN",
+ "supuestos": {"iva": 0.16, "iva_nota": "IVA 16% sobre subtotal con descuento y envío (supuesto declarado)",
+   "descuento_tramos": [[50, 0.10], [20, 0.05], [10, 0.02]], "descuento_tope": 0.10,
+   "envio_gratis_desde": 1500.0},
+ "productos": [
+  {"sku": "GAR20", "nombre": "Garrafón 20 L", "precio": 38.0, "existencias": 400, "minimo": 2},
+  {"sku": "GAR10", "nombre": "Garrafón 10 L", "precio": 24.0, "existencias": 250, "minimo": 2},
+  {"sku": "BOT1500", "nombre": "Botella 1.5 L (paquete 6)", "precio": 62.0, "existencias": 300, "minimo": 1},
+  {"sku": "BOT600", "nombre": "Botella 600 ml (paquete 12)", "precio": 74.0, "existencias": 200, "minimo": 1},
+  {"sku": "BOT355", "nombre": "Botella 355 ml (paquete 24)", "precio": 96.0, "existencias": 120, "minimo": 1},
+  {"sku": "DISP", "nombre": "Dispensador de mesa", "precio": 420.0, "existencias": 15, "minimo": 1},
+  {"sku": "AGUA_ALC", "nombre": "Garrafón 20 L alcalina", "precio": 55.0, "existencias": 60, "minimo": 2}
+ ],
+ "zonas": [
+  {"zona": "CENTRO", "cobertura": true, "envio": 40.0},
+  {"zona": "NORTE", "cobertura": true, "envio": 60.0},
+  {"zona": "SUR", "cobertura": true, "envio": 70.0},
+  {"zona": "ORIENTE", "cobertura": true, "envio": 85.0},
+  {"zona": "PONIENTE", "cobertura": false, "envio": 0.0}
+ ]
+}
