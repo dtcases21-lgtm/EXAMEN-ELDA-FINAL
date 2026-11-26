@@ -1,0 +1,251 @@
+{
+ "name": "AguaClara - Registro de pedidos",
+ "nodes": [
+  {
+   "parameters": {
+    "updates": [
+     "message"
+    ],
+    "additionalFields": {}
+   },
+   "name": "Telegram Trigger",
+   "type": "n8n-nodes-base.telegramTrigger",
+   "typeVersion": 1.2,
+   "position": [
+    0,
+    0
+   ],
+   "webhookId": "aguaclara-telegram"
+  },
+  {
+   "parameters": {
+    "httpMethod": "POST",
+    "path": "aguaclara-voz",
+    "responseMode": "responseNode",
+    "options": {}
+   },
+   "name": "Webhook Voz",
+   "type": "n8n-nodes-base.webhook",
+   "typeVersion": 2,
+   "position": [
+    0,
+    220
+   ],
+   "webhookId": "aguaclara-voz"
+  },
+  {
+   "parameters": {
+    "jsCode": "// Orquestador + agentes A1-A4 (n8n Code node). Registro persistente: workflow static data (solo workflows activos).\nconst sd = $getWorkflowStaticData('global');\nsd.seq = sd.seq || 0; sd.casos = sd.casos || {}; sd.eventos = sd.eventos || {}; sd.trazas = sd.trazas || []; sd.costos = sd.costos || [];\nfunction sha256(s){var r=Math.pow,m=r(2,32),i,j,x='',w=[],a=s=unescape(encodeURIComponent(s)),l=a.length*8,h=[],k=[],p=0,c={};\n for(i=2;p<64;i++){if(!c[i]){for(j=0;j<313;j+=i)c[j]=i;h[p]=(r(i,.5)*m)|0;k[p++]=(r(i,1/3)*m)|0}}\n a+='\\x80';while(a.length%64-56)a+='\\x00';for(i=0;i<a.length;i++){j=a.charCodeAt(i);w[i>>2]|=j<<((3-i)%4)*8}\n w[w.length]=(l/m)|0;w[w.length]=l;\n for(j=0;j<w.length;){var z=w.slice(j,j+=16),o=h;h=h.slice(0,8);\n  for(i=0;i<64;i++){var q=z[i-15],y=z[i-2],b=h[0],e=h[4],t=h[7]+(((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7)))+((e&h[5])^(~e&h[6]))+k[i]+(z[i]=(i<16)?z[i]:(z[i-16]+(((q>>>7)|(q<<25))^((q>>>18)|(q<<14))^(q>>>3))+z[i-7]+(((y>>>17)|(y<<15))^((y>>>19)|(y<<13))^(y>>>10)))|0);\n   h=[(t+(((b>>>2)|(b<<30))^((b>>>13)|(b<<19))^((b>>>22)|(b<<10)))+((b&h[1])^(b&h[2])^(h[1]&h[2])))|0].concat(h);h[4]=(h[4]+t)|0}\n  for(i=0;i<8;i++)h[i]=(h[i]+o[i])|0}\n for(i=0;i<8;i++)for(j=3;j+1;j--){var b2=(h[i]>>(j*8))&255;x+=((b2<16)?0:'')+b2.toString(16)}return x}\nconst H = v => sha256('aguaclara:' + v);\n// Hashes (no se publican ids): aprobador y secreto de la herramienta de voz\nconst USERS = {}; USERS['<SHA256_SALADO_DEL_CHAT_ID_APROBADOR>'] = ['u_demo1','aprobador'];\nconst TOOL_HASH = '<SHA256_SALADO_DEL_SECRETO_DE_LA_HERRAMIENTA>';\nconst CAT = {\"empresa\": \"AguaClara Distribuciones (ficticia)\", \"moneda\": \"MXN\", \"supuestos\": {\"iva\": 0.16, \"iva_nota\": \"IVA 16% sobre subtotal con descuento y envío (supuesto declarado)\", \"descuento_tramos\": [[50, 0.1], [20, 0.05], [10, 0.02]], \"descuento_tope\": 0.1, \"envio_gratis_desde\": 1500.0}, \"productos\": [{\"sku\": \"GAR20\", \"nombre\": \"Garrafón 20 L\", \"precio\": 38.0, \"existencias\": 400, \"minimo\": 2}, {\"sku\": \"GAR10\", \"nombre\": \"Garrafón 10 L\", \"precio\": 24.0, \"existencias\": 250, \"minimo\": 2}, {\"sku\": \"BOT1500\", \"nombre\": \"Botella 1.5 L (paquete 6)\", \"precio\": 62.0, \"existencias\": 300, \"minimo\": 1}, {\"sku\": \"BOT600\", \"nombre\": \"Botella 600 ml (paquete 12)\", \"precio\": 74.0, \"existencias\": 200, \"minimo\": 1}, {\"sku\": \"BOT355\", \"nombre\": \"Botella 355 ml (paquete 24)\", \"precio\": 96.0, \"existencias\": 120, \"minimo\": 1}, {\"sku\": \"DISP\", \"nombre\": \"Dispensador de mesa\", \"precio\": 420.0, \"existencias\": 15, \"minimo\": 1}, {\"sku\": \"AGUA_ALC\", \"nombre\": \"Garrafón 20 L alcalina\", \"precio\": 55.0, \"existencias\": 60, \"minimo\": 2}], \"zonas\": [{\"zona\": \"CENTRO\", \"cobertura\": true, \"envio\": 40.0}, {\"zona\": \"NORTE\", \"cobertura\": true, \"envio\": 60.0}, {\"zona\": \"SUR\", \"cobertura\": true, \"envio\": 70.0}, {\"zona\": \"ORIENTE\", \"cobertura\": true, \"envio\": 85.0}, {\"zona\": \"PONIENTE\", \"cobertura\": false, \"envio\": 0.0}]};\nconst MAXLEN = 500, TTL_DEF = 30, PRESUP = 0.05;\nconst INY = /(ignora|olvida|desactiva|omite).{0,30}(reglas|instrucciones|pol[ií]ticas|controles)|revela.{0,20}(clave|token|secret)|api[ _-]?key|system prompt|sk_[a-z0-9]{8,}|\\b\\d{9,10}:AA[\\w-]{20,}/i;\nconst now = () => new Date().toISOString().slice(0,19) + 'Z';\nconst SIM = ' (resultado simulado)';\nfunction traza(c, ag, est, res){ sd.trazas.push({ts: now(), caso_id: c, agente: ag, estado: est, resultado: res}); if (sd.trazas.length > 800) sd.trazas.shift(); }\nlet nl = 0;\nfunction costo(c, etapa, ag, unidad, reint){ sd.costos.push({fecha: now(), caso_id: c, llamada_id: 'L-' + (sd.costos.length + 1), etapa, agente: ag, proveedor: 'n8n', modelo: 'determinista', tokens_entrada: 'NA', tokens_salida: 'NA', tokens_cache: 'NA', duracion_voz_s: 'NA', unidad, tarifa: 0, costo: 0, moneda: 'USD', estado: 'ok', reintento: reint || 0, origen: 'medido'}); }\nfunction norm(s){ return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9ñ. ]/g,''); }\nconst ALIAS = {GAR20:['garrafon 20','garrafon de 20','garrafones de 20','garrafon'],GAR10:['garrafon 10','garrafon de 10','garrafones de 10'],BOT1500:['1.5','botella 15','botellas de 15'],BOT600:['600'],BOT355:['355'],DISP:['dispensador'],AGUA_ALC:['alcalina']};\nfunction calcular(precio, cant, envio, ov){ const s = CAT.supuestos; const sub = Math.round(precio*cant*100)/100; let pct = 0;\n  for (const [u,p] of s.descuento_tramos){ if (cant >= u){ pct = p; break; } }\n  if (ov != null) pct = ov; else pct = Math.min(pct, s.descuento_tope);\n  const desc = Math.round(sub*pct*100)/100, base = sub - desc, env = base >= s.envio_gratis_desde ? 0 : envio, iva = Math.round((base+env)*s.iva*100)/100;\n  return {subtotal: sub, descuento_pct: pct, descuento: desc, envio: env, iva, total: Math.round((base+env+iva)*100)/100}; }\nfunction A1(c, t){ const d = {}; let m;\n  m = t.match(/cliente\\s*[:=]\\s*([^,;\\n]+)/i); d.cliente = m ? m[1].trim() : null;\n  m = t.match(/cantidad\\s*[:=]\\s*(\\d+)/i) || t.match(/\\b(\\d+)\\s*(?:garraf|botell|paquete|dispens|unid)/i); d.cantidad = m ? parseInt(m[1],10) : null;\n  m = t.match(/zona\\s*[:=]\\s*([A-Za-zÁÉÍÓÚáéíóú]+)/i); d.zona = m ? norm(m[1]).toUpperCase() : null;\n  m = t.match(/fecha\\s*[:=]\\s*(\\d{4}-\\d{2}-\\d{2})/i); d.fecha = m ? m[1] : null;\n  m = t.match(/producto\\s*[:=]\\s*([^,;\\n]+)/i); const pt = norm(m ? m[1] : t).trim(); d.sku = null;\n  const ord = Object.entries(ALIAS).sort((a,b) => Math.max(...b[1].map(x=>x.length)) - Math.max(...a[1].map(x=>x.length)));\n  for (const [sku, al] of ord){ if (m && sku.toLowerCase() === pt){ d.sku = sku; break; } if (al.slice().sort((a,b)=>b.length-a.length).some(a => pt.includes(a))){ d.sku = sku; break; } }\n  if (!d.sku && m){ const p = CAT.productos.find(p => p.sku.toLowerCase() === pt); if (p) d.sku = p.sku; }\n  const f = ['cliente','sku','cantidad','zona','fecha'].filter(k => d[k] == null);\n  if (d.fecha && isNaN(Date.parse(d.fecha))) f.push('fecha_valida');\n  return {caso_id: c, agente: 'A1', estado: f.length ? 'aclaracion' : 'ok', resultado: {requerimiento: d, faltantes: f}, fuentes: [], advertencias: []}; }\nfunction A2(c, req){ const r = req.requerimiento, p = CAT.productos.find(x => x.sku === r.sku), z = CAT.zonas.find(x => x.zona === r.zona);\n  if (!p || !z) return {caso_id: c, agente: 'A2', estado: 'insuficiente', resultado: {motivo: 'producto o zona sin evidencia en catálogo'}, fuentes: [], advertencias: ['insuficiencia']};\n  return {caso_id: c, agente: 'A2', estado: 'ok', resultado: {producto: p, zona: z, existencias_ok: p.existencias >= r.cantidad, minimo_ok: r.cantidad >= p.minimo, cobertura_ok: z.cobertura}, fuentes: ['catalogo#' + p.sku, 'catalogo#zona:' + z.zona], advertencias: []}; }\nfunction A3(c, req, ev, ov){ const r = req.requerimiento, k = calcular(ev.producto.precio, r.cantidad, ev.zona.envio, ov);\n  return {caso_id: c, agente: 'A3', estado: 'ok', resultado: Object.assign({}, k, {moneda: 'MXN', supuestos: CAT.supuestos.iva_nota, etiqueta: 'resultado simulado', sku: r.sku, cantidad: r.cantidad, zona: r.zona}), fuentes: ['catalogo'], advertencias: []}; }\nfunction A4(c, req, ev, prop){ const e = [], p = prop.resultado, r = req.requerimiento, prod = CAT.productos.find(x => x.sku === r.sku), z = CAT.zonas.find(x => x.zona === r.zona);\n  if (r.cantidad > prod.existencias) e.push('existencias_insuficientes'); if (r.cantidad < prod.minimo) e.push('bajo_minimo'); if (!z.cobertura) e.push('zona_sin_cobertura');\n  if (p.descuento_pct > CAT.supuestos.descuento_tope + 1e-9) e.push('descuento_sobre_tope');\n  const ref = calcular(prod.precio, r.cantidad, z.envio); if (Math.abs(ref.total - p.total) > 0.01 || Math.abs(ref.subtotal - p.subtotal) > 0.01) e.push('calculo_no_coincide');\n  if (!prop.fuentes.length) e.push('sin_fuentes'); if (p.etiqueta !== 'resultado simulado') e.push('sin_rotulo_simulacion');\n  const bloq = e.filter(x => ['existencias_insuficientes','bajo_minimo','zona_sin_cobertura'].includes(x)).length;\n  return {caso_id: c, agente: 'A4', estado: !e.length ? 'ok' : (bloq ? 'bloqueado' : 'devuelto'), resultado: {hallazgos: e, total_recalculado: ref.total}, fuentes: ['recalculo independiente'], advertencias: e}; }\nfunction expirar(){ let n = 0; for (const id in sd.casos){ const c = sd.casos[id]; if (c.estado === 'pendiente_aprobacion' && c.expira <= now()){ c.estado = 'vencido'; c.actualizado = now(); traza(id, 'ORQ', 'vencido', {}); n++; } } return n; }\nfunction cerrar(id, est, msg){ const c = sd.casos[id]; c.estado = est; c.actualizado = now(); traza(id, 'ORQ', est, {mensaje: msg}); return {caso_id: id, estado: est, mensaje: msg + SIM}; }\nfunction procesar(texto, uid, canal, chatId, opts){\n  const g = typeof texto !== 'string' || !texto.trim() ? 'vacio' : texto.length > MAXLEN ? 'longitud' : INY.test(texto) ? 'inyeccion' : null;\n  const id = 'PED-' + String(++sd.seq).padStart(4,'0'); const ts = now();\n  sd.casos[id] = {caso_id: id, canal, usuario: uid, estado: 'en_proceso', version: 1, datos: null, resultado: null, creado: ts, actualizado: ts, expira: null, correccion: false, chat: chatId || null};\n  if (g){ traza(id, 'ORQ', 'bloqueado', {motivo: g}); return Object.assign(cerrar(id, 'rechazado', 'Entrada no válida (' + g + '); corrige y reenvía'), {motivo: g}); }\n  if (opts.skills) traza(id, 'ORQ', 'skill_cargado', {skills: ['cotizar-pedido-agua@1.0.0', 'revisar-pedido-agua@1.0.0']});\n  const a1 = A1(id, texto); traza(id, 'A1', a1.estado, a1.resultado); costo(id, 'agentes', 'A1', 'regla');\n  if (a1.estado !== 'ok') return cerrar(id, 'aclaracion', 'Faltan datos: ' + a1.resultado.faltantes.join(', '));\n  const a2 = A2(id, a1.resultado); traza(id, 'A2', a2.estado, {existencias_ok: a2.resultado.existencias_ok, fuentes: a2.fuentes}); costo(id, 'agentes', 'A2', 'consulta');\n  if (a2.estado !== 'ok') return cerrar(id, 'rechazado', 'Sin evidencia en la fuente autorizada');\n  let ov = opts.forzar_descuento != null ? opts.forzar_descuento : null, a3, a4;\n  for (let it = 1; it <= 3; it++){\n    a3 = A3(id, a1.resultado, a2.resultado, ov); traza(id, 'A3', 'ok', {iter: it, total: a3.resultado.total, descuento_pct: a3.resultado.descuento_pct}); costo(id, 'agentes', 'A3', 'funcion', it-1);\n    a4 = A4(id, a1.resultado, a2.resultado, a3); traza(id, 'A4', a4.estado, {iter: it, hallazgos: a4.resultado.hallazgos}); costo(id, 'revision', 'A4', 'regla', it-1);\n    if (a4.estado === 'ok') break; sd.casos[id].correccion = true;\n    if (a4.estado === 'bloqueado') return cerrar(id, 'rechazado', 'Bloqueado por revisor: ' + a4.resultado.hallazgos.join(', '));\n    ov = null; }\n  if (a4.estado !== 'ok') return cerrar(id, 'devuelto_agotado', 'No superó la revisión en 3 iteraciones');\n  const c = sd.casos[id]; c.estado = 'pendiente_aprobacion'; c.version = 2; c.datos = a1.resultado.requerimiento; c.resultado = a3.resultado;\n  c.expira = new Date(Date.now() + (opts.ttl != null ? opts.ttl : TTL_DEF) * 60000).toISOString().slice(0,19) + 'Z'; c.actualizado = now(); traza(id, 'ORQ', 'pendiente_aprobacion', {version: c.version, expira: c.expira});\n  return {caso_id: id, estado: c.estado, version: c.version, propuesta: c.resultado, expira: c.expira, mensaje: 'Propuesta lista' + SIM}; }\nfunction resumen(r){ if (r.estado !== 'pendiente_aprobacion') return r.mensaje; const p = r.propuesta;\n  return `${r.caso_id}: ${p.cantidad} x ${p.sku} a ${p.zona}\\nSubtotal ${p.subtotal} | desc ${p.descuento_pct*100}% | envío ${p.envio} | IVA ${p.iva}\\nTOTAL ${p.total} MXN (resultado simulado)\\nVence: ${r.expira}\\nAprobador: /aprobar ${r.caso_id} ${r.version}  o  /rechazar ${r.caso_id} ${r.version}`; }\nfunction decidir(id, uid, rol, accion, ver, evento){ expirar();\n  if (rol !== 'aprobador'){ traza(id, 'ORQ', 'bloqueado', {motivo: 'sin_permiso_aprobar', usuario: uid}); return 'No tienes permiso para aprobar o rechazar.'; }\n  const clave = evento || `${id}:${uid}:${accion}:${ver}`; if (sd.eventos[clave]) return '';\n  const c = sd.casos[id]; if (!c) return 'Folio inexistente.'; if (c.estado !== 'pendiente_aprobacion') return `No se puede ${accion}: estado actual ${c.estado}.`;\n  if (parseInt(ver,10) !== c.version) return `Versión no vigente (vigente: ${c.version}).`;\n  sd.eventos[clave] = now(); sd.eventos[`${id}:${accion}:${ver}`] = now(); c.estado = accion === 'aprobar' ? 'confirmado' : 'rechazado'; c.actualizado = now(); traza(id, 'ORQ', c.estado, {usuario: uid, version: ver});\n  return `Pedido ${id} ${c.estado}. (resultado simulado)`; }\nfunction estadoTxt(id){ expirar(); const c = sd.casos[id]; if (!c) return 'Folio inexistente.'; return `${id}: ${c.estado} (v${c.version}, canal ${c.canal})` + (c.resultado ? `\\nTotal ${c.resultado.total} MXN` : '') + ' (resultado simulado)'; }\nconst AYUDA = 'Comandos:\\n/nuevo cliente: X, producto: garrafon 20, cantidad: 30, zona: centro, fecha: 2026-12-01\\n/estado PED-0001\\n/aprobar PED-0001 2 | /rechazar PED-0001 2 (solo aprobador)\\nTodo es un resultado simulado.';\nconst j = $input.first().json; const out = [];\nif (j.message || j.edited_message){ // ---- Telegram\n  const m = j.message || j.edited_message, chat = String(m.chat.id), ev = 'tg:' + (j.update_id != null ? j.update_id : m.message_id);\n  const u = USERS[H(chat)];\n  const reply = t => out.push({json: {canal: 'telegram', chat_id: chat, respuesta: t}});\n  if (!u){ traza('N/A', 'ORQ', 'bloqueado', {motivo: 'usuario_no_autorizado'}); reply('No autorizado. Solicita acceso al responsable del proyecto.'); }\n  else if (sd.eventos[ev]){ /* duplicado: sin segunda operación */ traza('N/A', 'ORQ', 'duplicado', {evento: ev}); }\n  else {\n    sd.eventos[ev] = now(); if (u[1] === 'aprobador') sd.aprobador_chat = chat; expirar();\n    const t = (m.text || '').trim(); const mm = t.match(/^\\/(\\w+)(?:@\\w+)?\\s*([\\s\\S]*)$/);\n    if (mm && ['start','ayuda','help'].includes(mm[1])) reply(AYUDA);\n    else if (mm && mm[1] === 'estado') reply(estadoTxt((mm[2] || '').trim().toUpperCase()));\n    else if (mm && (mm[1] === 'aprobar' || mm[1] === 'rechazar')){ const p = mm[2].trim().split(/\\s+/); const r = decidir((p[0] || '').toUpperCase(), u[0], u[1], mm[1], p[1]); if (r) reply(r); }\n    else { let texto = mm ? (mm[1] === 'nuevo' ? mm[2] : null) : t, opts = {skills: true};\n      if (texto === null) reply(AYUDA); else {\n        const mt = texto.match(/\\bttl\\s*[:=]\\s*(\\d+)/i); if (mt && u[1] === 'aprobador'){ opts.ttl = parseInt(mt[1],10); texto = texto.replace(mt[0], ''); }\n        const mf = texto.match(/\\bforzar_descuento\\s*[:=]\\s*([\\d.]+)/i); if (mf && u[1] === 'aprobador'){ opts.forzar_descuento = parseFloat(mf[1]); texto = texto.replace(mf[0], ''); }\n        if (!texto.trim()) reply('Envía los datos del pedido.\\n' + AYUDA); else { const r = procesar(texto, u[0], 'telegram', chat, opts); reply(resumen(r)); } } } }\n} else if (j.body !== undefined && j.headers){ // ---- Voz (webhook autenticado)\n  const sec = j.headers['x-tool-secret'] || ''; const b = j.body || {};\n  if (H(sec) !== TOOL_HASH){ traza('N/A', 'ORQ', 'bloqueado', {motivo: 'herramienta_sin_autorizacion'}); out.push({json: {canal: 'voz', ok: false, motivo: 'no autorizado'}}); }\n  else {\n    expirar(); const acc = String(b.accion || '').toLowerCase();\n    if (acc === 'consultar'){ const id = String(b.folio || '').toUpperCase(); const c = sd.casos[id];\n      out.push({json: {canal: 'voz', ok: !!c, folio: id, estado: c ? c.estado : null, total: c && c.resultado ? c.resultado.total : null, mensaje: c ? `El pedido ${id} está ${c.estado.replace(/_/g,' ')} (resultado simulado)` : 'Folio inexistente. No tengo registro de ese folio.'}}); }\n    else if (acc === 'crear'){ const texto = `cliente: ${b.cliente || ''}, producto: ${b.producto || ''}, cantidad: ${b.cantidad || ''}, zona: ${b.zona || ''}, fecha: ${b.fecha || ''}`.replace(/(cliente|producto|cantidad|zona|fecha): ,?/g, '').trim();\n      const full = ['cliente','producto','cantidad','zona','fecha'].filter(k => b[k]).map(k => `${k}: ${b[k]}`).join(', ');\n      const r = procesar(full, 'u_voz', 'voz', null, {skills: true});\n      out.push({json: {canal: 'voz', ok: r.estado === 'pendiente_aprobacion', folio: r.caso_id, estado: r.estado, total: r.propuesta ? r.propuesta.total : null, mensaje: r.estado === 'pendiente_aprobacion' ? `Creé el pedido ${r.caso_id} por ${r.propuesta.total} pesos. Queda pendiente de aprobación humana (resultado simulado)` : r.mensaje}});\n      if (r.estado === 'pendiente_aprobacion' && sd.aprobador_chat) out.push({json: {canal: 'telegram', chat_id: sd.aprobador_chat, respuesta: 'Pedido creado por VOZ\\n' + resumen(r)}}); }\n    else out.push({json: {canal: 'voz', ok: false, motivo: 'accion no soportada'}}); }\n} else if (j.query && j.query.q !== undefined || (j.headers && j.method === 'GET')){ out.push({json: {}}); }\nif (!out.length) out.push({json: {canal: 'telegram', chat_id: '', respuesta: ''}});\nreturn out;\n"
+   },
+   "name": "Orquestador y Agentes",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    300,
+    100
+   ]
+  },
+  {
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "strict",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "c1",
+       "leftValue": "={{ $json.canal }}",
+       "rightValue": "voz",
+       "operator": {
+        "type": "string",
+        "operation": "equals"
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "options": {}
+   },
+   "name": "¿Canal voz?",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    560,
+    100
+   ]
+  },
+  {
+   "parameters": {
+    "respondWith": "firstIncomingItem",
+    "options": {}
+   },
+   "name": "Responder voz",
+   "type": "n8n-nodes-base.respondToWebhook",
+   "typeVersion": 1.1,
+   "position": [
+    820,
+    0
+   ]
+  },
+  {
+   "parameters": {
+    "conditions": {
+     "options": {
+      "caseSensitive": true,
+      "leftValue": "",
+      "typeValidation": "strict",
+      "version": 2
+     },
+     "conditions": [
+      {
+       "id": "c1",
+       "leftValue": "={{ $json.respuesta }}",
+       "rightValue": "",
+       "operator": {
+        "type": "string",
+        "operation": "notEmpty",
+        "singleValue": true
+       }
+      }
+     ],
+     "combinator": "and"
+    },
+    "options": {}
+   },
+   "name": "¿Hay respuesta?",
+   "type": "n8n-nodes-base.if",
+   "typeVersion": 2.2,
+   "position": [
+    820,
+    200
+   ]
+  },
+  {
+   "parameters": {
+    "chatId": "={{ $json.chat_id }}",
+    "text": "={{ $json.respuesta }}",
+    "additionalFields": {
+     "appendAttribution": false
+    }
+   },
+   "name": "Enviar Telegram",
+   "type": "n8n-nodes-base.telegram",
+   "typeVersion": 1.2,
+   "position": [
+    1080,
+    200
+   ],
+   "webhookId": "aguaclara-send"
+  },
+  {
+   "parameters": {
+    "httpMethod": "GET",
+    "path": "aguaclara-export",
+    "responseMode": "lastNode",
+    "options": {}
+   },
+   "name": "Webhook Exportar",
+   "type": "n8n-nodes-base.webhook",
+   "typeVersion": 2,
+   "position": [
+    0,
+    480
+   ],
+   "webhookId": "aguaclara-export"
+  },
+  {
+   "parameters": {
+    "jsCode": "// Exportación sanitizada: sin cliente, sin chat_id, sin textos. Requiere cabecera x-tool-secret (hash comparado).\nconst sd = $getWorkflowStaticData('global');\nfunction sha256(s){var r=Math.pow,m=r(2,32),i,j,x='',w=[],a=s=unescape(encodeURIComponent(s)),l=a.length*8,h=[],k=[],p=0,c={};\n for(i=2;p<64;i++){if(!c[i]){for(j=0;j<313;j+=i)c[j]=i;h[p]=(r(i,.5)*m)|0;k[p++]=(r(i,1/3)*m)|0}}\n a+='\\x80';while(a.length%64-56)a+='\\x00';for(i=0;i<a.length;i++){j=a.charCodeAt(i);w[i>>2]|=j<<((3-i)%4)*8}\n w[w.length]=(l/m)|0;w[w.length]=l;\n for(j=0;j<w.length;){var z=w.slice(j,j+=16),o=h;h=h.slice(0,8);\n  for(i=0;i<64;i++){var q=z[i-15],y=z[i-2],b=h[0],e=h[4],t=h[7]+(((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7)))+((e&h[5])^(~e&h[6]))+k[i]+(z[i]=(i<16)?z[i]:(z[i-16]+(((q>>>7)|(q<<25))^((q>>>18)|(q<<14))^(q>>>3))+z[i-7]+(((y>>>17)|(y<<15))^((y>>>19)|(y<<13))^(y>>>10)))|0);\n   h=[(t+(((b>>>2)|(b<<30))^((b>>>13)|(b<<19))^((b>>>22)|(b<<10)))+((b&h[1])^(b&h[2])^(h[1]&h[2])))|0].concat(h);h[4]=(h[4]+t)|0}\n  for(i=0;i<8;i++)h[i]=(h[i]+o[i])|0}\n for(i=0;i<8;i++)for(j=3;j+1;j--){var b2=(h[i]>>(j*8))&255;x+=((b2<16)?0:'')+b2.toString(16)}return x}\nconst j = $input.first().json;\nif (sha256('aguaclara:' + (j.headers['x-tool-secret'] || '')) !== '<SHA256_SALADO_DEL_SECRETO_DE_LA_HERRAMIENTA>') return [{json: {ok: false, motivo: 'no autorizado'}}];\nconst casos = Object.values(sd.casos || {});\nconst pedidos = casos.map(c => ({caso_id: c.caso_id, canal: c.canal, estado: c.estado, fecha: c.creado.slice(0,10), sku: c.resultado ? c.resultado.sku : null, zona: c.resultado ? c.resultado.zona : null,\n  cantidad: c.resultado ? c.resultado.cantidad : null, total: c.resultado ? c.resultado.total : null, descuento_pct: c.resultado ? c.resultado.descuento_pct : null, correccion: !!c.correccion, costo_usd: 0}));\nreturn [{json: {ok: true, pedidos, trazas: (sd.trazas || []).slice(-400), costos: sd.costos || []}}];\n"
+   },
+   "name": "Exportar sanitizado",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    300,
+    480
+   ]
+  }
+ ],
+ "connections": {
+  "Telegram Trigger": {
+   "main": [
+    [
+     {
+      "node": "Orquestador y Agentes",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Webhook Voz": {
+   "main": [
+    [
+     {
+      "node": "Orquestador y Agentes",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Orquestador y Agentes": {
+   "main": [
+    [
+     {
+      "node": "¿Canal voz?",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "¿Canal voz?": {
+   "main": [
+    [
+     {
+      "node": "Responder voz",
+      "type": "main",
+      "index": 0
+     }
+    ],
+    [
+     {
+      "node": "¿Hay respuesta?",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "¿Hay respuesta?": {
+   "main": [
+    [
+     {
+      "node": "Enviar Telegram",
+      "type": "main",
+      "index": 0
+     }
+    ],
+    []
+   ]
+  },
+  "Webhook Exportar": {
+   "main": [
+    [
+     {
+      "node": "Exportar sanitizado",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  }
+ },
+ "settings": {
+  "executionOrder": "v1"
+ }
+}
