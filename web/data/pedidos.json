@@ -18,7 +18,8 @@
    "total": 1302.68,
    "descuento_pct": 0.05,
    "correccion": false,
-   "costo_usd": 0
+   "costo_usd": 0,
+   "cliente": "Nombre Real (ERROR DELIBERADO)"
   },
   {
    "caso_id": "PED-0002",
