@@ -1,0 +1,14 @@
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "ORQ", "estado": "skill_cargado", "resultado": {"skills": [{"skill": "cotizar-pedido-agua", "version": "1.0.0", "sha256": "33c3456b552d", "criterios": "5 campos válidos; total = recálculo independiente (±0.01); fuentes presentes; rótulo de simulación."}, {"skill": "revisar-pedido-agua", "version": "1.0.0", "sha256": "3667404c9479", "criterios": "cero hallazgos para liberar."}]}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "A1", "estado": "ok", "resultado": {"requerimiento": {"cliente": "Cafe Luna", "cantidad": 30, "zona": "CENTRO", "fecha": "2026-12-01", "sku": "GAR20"}, "faltantes": []}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "A2", "estado": "ok", "resultado": {"existencias_ok": true}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "A3", "estado": "ok", "resultado": {"iter": 1, "total": 707.6, "desc_pct": 0.5}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "A4", "estado": "devuelto", "resultado": {"iter": 1, "hallazgos": ["descuento_sobre_tope", "calculo_no_coincide"]}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "A3", "estado": "ok", "resultado": {"iter": 2, "total": 1302.68, "desc_pct": 0.05}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "A4", "estado": "ok", "resultado": {"iter": 2, "hallazgos": []}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0001", "agente": "ORQ", "estado": "pendiente_aprobacion", "resultado": {"version": 2, "expira": "2026-11-26T20:48:36+00:00"}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0002", "agente": "ORQ", "estado": "skill_cargado", "resultado": {"skills": [{"skill": "cotizar-pedido-agua", "version": "1.0.0", "sha256": "33c3456b552d", "criterios": "5 campos válidos; total = recálculo independiente (±0.01); fuentes presentes; rótulo de simulación."}, {"skill": "revisar-pedido-agua", "version": "1.0.0", "sha256": "3667404c9479", "criterios": "cero hallazgos para liberar."}]}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0002", "agente": "A1", "estado": "ok", "resultado": {"requerimiento": {"cliente": "Oficinas Sol", "cantidad": 12, "zona": "NORTE", "fecha": "2026-12-03", "sku": "BOT600"}, "faltantes": []}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0002", "agente": "A2", "estado": "ok", "resultado": {"existencias_ok": true}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0002", "agente": "A3", "estado": "ok", "resultado": {"iter": 1, "total": 1079.08, "desc_pct": 0.02}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0002", "agente": "A4", "estado": "ok", "resultado": {"iter": 1, "hallazgos": []}}
+{"ts": "2026-11-26T20:18:36+00:00", "caso_id": "PED-0002", "agente": "ORQ", "estado": "pendiente_aprobacion", "resultado": {"version": 2, "expira": "2026-11-26T20:48:36+00:00"}}

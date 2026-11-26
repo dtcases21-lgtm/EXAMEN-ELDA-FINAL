@@ -1,0 +1,11 @@
+fecha,caso_id,llamada_id,etapa,agente,proveedor,modelo,tokens_entrada,tokens_salida,tokens_cache,duracion_voz_s,unidad,tarifa,costo,moneda,estado,reintento,origen
+2026-11-26T20:18:36+00:00,PED-0001,L-3810c47a,agentes,A1,local,determinista,NA,NA,NA,NA,regla,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0001,L-df353a4a,agentes,A2,local,determinista,NA,NA,NA,NA,consulta,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0001,L-e35fc2f3,agentes,A3,local,determinista,NA,NA,NA,NA,funcion,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0001,L-e6d15538,revision,A4,local,determinista,NA,NA,NA,NA,regla,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0001,L-f388fe7e,agentes,A3,local,determinista,NA,NA,NA,NA,funcion,0.0,0.0,USD,ok,1,medido
+2026-11-26T20:18:36+00:00,PED-0001,L-f46f9d74,revision,A4,local,determinista,NA,NA,NA,NA,regla,0.0,0.0,USD,ok,1,medido
+2026-11-26T20:18:36+00:00,PED-0002,L-70c64147,agentes,A1,local,determinista,NA,NA,NA,NA,regla,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0002,L-b57b4f53,agentes,A2,local,determinista,NA,NA,NA,NA,consulta,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0002,L-0095452c,agentes,A3,local,determinista,NA,NA,NA,NA,funcion,0.0,0.0,USD,ok,0,medido
+2026-11-26T20:18:36+00:00,PED-0002,L-8d9f4186,revision,A4,local,determinista,NA,NA,NA,NA,regla,0.0,0.0,USD,ok,0,medido
