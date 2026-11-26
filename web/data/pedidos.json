@@ -1,0 +1,36 @@
+{
+ "empresa": "AguaClara Distribuciones (ficticia)",
+ "proposito": "Registro de pedidos de agua embotellada",
+ "fuente": "Registro privado de casos (exportación sanitizada)",
+ "periodo": "Nov 2026 (datos de prueba)",
+ "actualizado": "2026-11-26T20:18:49+00:00",
+ "ficticio": true,
+ "moneda": "MXN",
+ "pedidos": [
+  {
+   "caso_id": "PED-0001",
+   "canal": "cli",
+   "estado": "pendiente_aprobacion",
+   "fecha": "2026-11-26",
+   "sku": "GAR20",
+   "zona": "CENTRO",
+   "cantidad": 30,
+   "total": 1302.68,
+   "descuento_pct": 0.05,
+   "costo_usd": 0,
+   "cliente": "Nombre Real (ERROR DELIBERADO)"
+  },
+  {
+   "caso_id": "PED-0002",
+   "canal": "cli",
+   "estado": "pendiente_aprobacion",
+   "fecha": "2026-11-26",
+   "sku": "BOT600",
+   "zona": "NORTE",
+   "cantidad": 12,
+   "total": 1079.08,
+   "descuento_pct": 0.02,
+   "costo_usd": 0
+  }
+ ]
+}

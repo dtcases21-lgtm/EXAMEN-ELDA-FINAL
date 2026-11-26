@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AguaClara · Registro de pedidos (datos ficticios)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#principal">Saltar al contenido</a>
+<header>
+  <h1>AguaClara Distribuciones</h1>
+  <p class="badge" role="note">Datos ficticios · resultado simulado</p>
+  <dl class="meta">
+    <div><dt>Propósito</dt><dd id="m-proposito">—</dd></div>
+    <div><dt>Periodo</dt><dd id="m-periodo">—</dd></div>
+    <div><dt>Fuente</dt><dd id="m-fuente">—</dd></div>
+    <div><dt>Actualizado</dt><dd id="m-actualizado">—</dd></div>
+  </dl>
+</header>
+<main id="principal">
+  <div id="estado" role="status" aria-live="polite">Cargando datos…</div>
+  <section aria-labelledby="h-kpi" id="sec-kpi" hidden>
+    <h2 id="h-kpi">Indicadores</h2>
+    <div class="kpis">
+      <article class="kpi"><h3>Tasa de pedidos confirmados</h3><p class="v" id="k1">—</p><p class="f">confirmados ÷ pedidos con propuesta liberada × 100 · % · periodo del panel · fuente: registro de casos · <b>medido</b></p></article>
+      <article class="kpi"><h3>Pedidos liberados sin corrección</h3><p class="v" id="k2">—</p><p class="f">pedidos sin devolución del revisor ÷ pedidos procesados × 100 · % · fuente: trazas · <b>medido</b></p></article>
+      <article class="kpi"><h3>Costo variable por pedido</h3><p class="v" id="k3">—</p><p class="f">suma de costos variables ÷ pedidos completados · USD/pedido · fuente: costos.csv · <b>medido</b>; meta esperada: ≤ 0.01 USD</p></article>
+    </div>
+  </section>
+  <section aria-labelledby="h-graf" id="sec-graf" hidden>
+    <h2 id="h-graf">Pedidos por estado</h2>
+    <p>Pregunta: ¿qué proporción de pedidos termina confirmada, rechazada o vencida?</p>
+    <div id="grafica" role="img" aria-label="Barras de pedidos por estado"></div>
+    <table id="t-resumen"><caption>Resumen accesible de la gráfica</caption><thead><tr><th scope="col">Estado</th><th scope="col">Pedidos</th><th scope="col">Porcentaje</th></tr></thead><tbody></tbody></table>
+  </section>
+  <section aria-labelledby="h-hist" id="sec-hist" hidden>
+    <h2 id="h-hist">Historial de pedidos</h2>
+    <form id="filtros" class="filtros">
+      <label>Estado <select id="f-estado"><option value="">Todos</option></select></label>
+      <label>Canal <select id="f-canal"><option value="">Todos</option></select></label>
+      <label>Folio <input id="f-folio" type="search" placeholder="PED-0001"></label>
+      <button type="reset" id="reset">Restablecer</button>
+    </form>
+    <p id="sin-resultados" hidden>Sin resultados con estos filtros.</p>
+    <div class="tabla-wrap"><table id="t-hist"><caption>Pedidos (sin datos personales)</caption>
+      <thead><tr><th scope="col">Folio</th><th scope="col">Fecha</th><th scope="col">Canal</th><th scope="col">Estado</th><th scope="col">Producto</th><th scope="col">Zona</th><th scope="col">Cant.</th><th scope="col">Total MXN</th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section aria-labelledby="h-voz">
+    <h2 id="h-voz">Asistente de voz (IA)</h2>
+    <p>Habla con el asistente de voz para consultar o crear un pedido de prueba. Es una IA y te pedirá tu consentimiento antes de empezar. Usa solo datos ficticios.</p>
+    <elevenlabs-convai agent-id="agent_0801m8b8gttrf6mv2nrhaf38rnfc"></elevenlabs-convai>
+    <p id="voz-alt" class="alt" hidden>La voz no está disponible (micrófono denegado o servicio caído). Alternativa: escribe <b>/nuevo</b> o <b>/estado PED-0001</b> al bot de Telegram <b>@jimenoidebot</b>.</p>
+  </section>
+</main>
+<footer><p>Proyecto académico · AI Tools · Todos los datos son ficticios y toda salida de negocio es un resultado simulado.</p></footer>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+<script src="app.js"></script>
+</body>
+</html>
