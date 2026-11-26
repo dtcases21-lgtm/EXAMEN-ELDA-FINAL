@@ -1,0 +1,13 @@
+proveedor,concepto,tarifa,unidad,fuente,fecha_consulta,verificado
+ElevenLabs,Plan Starter,6,USD/mes (75 min incluidos),https://elevenlabs.io/pricing/agents,2026-11-26,si
+ElevenLabs,Plan Creator,22,USD/mes (275 min),https://elevenlabs.io/pricing/agents,2026-11-26,si
+ElevenLabs,Plan Pro,99,USD/mes (1238 min),https://elevenlabs.io/pricing/agents,2026-11-26,si
+ElevenLabs,Minuto adicional,0.08,USD/min,https://elevenlabs.io/pricing/agents,2026-11-26,parcial (columna ambigua en la página)
+ElevenLabs,LLM del agente,NA,"por uso, al costo, varía por modelo",https://elevenlabs.io/pricing/agents,2026-11-26,no cuantificado
+n8n Cloud,Starter (facturación anual),20,EUR/mes (2500 ejecuciones),https://n8n.io/pricing,2026-11-26,si
+n8n Cloud,Pro (facturación anual),50,EUR/mes (10000 ejecuciones),https://n8n.io/pricing,2026-11-26,si
+n8n Cloud,Business,667,EUR/mes (40000 ejecuciones; solo autoalojado),https://n8n.io/pricing,2026-11-26,si
+n8n Cloud,Prueba gratuita,0,"1000 ejecuciones, sin tarjeta",https://n8n.io/pricing,2026-11-26,si
+GitHub,Pages y Actions (repo público),0,USD,https://docs.github.com/en/pages,2026-11-26,no consultado en esta sesión
+Telegram,Bot API,0,USD,https://core.telegram.org/bots/api,2026-11-26,no consultado en esta sesión
+LLM de agentes,Agentes 1-4 deterministas,0,sin llamadas a modelo,n/a,2026-11-26,medido

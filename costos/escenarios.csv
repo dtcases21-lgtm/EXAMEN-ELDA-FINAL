@@ -1,0 +1,7 @@
+pedidos_mes,escenario,ejecuciones_n8n,plan_n8n,costo_n8n_EUR,minutos_voz,plan_voz,costo_voz_USD,nota
+100,base,400,Starter,20,60,Starter,6.0,LLM de voz no cuantificado; minuto extra 0.08 USD verificado parcialmente
+100,alto,600,Starter,20,150,Starter,12.0,LLM de voz no cuantificado; minuto extra 0.08 USD verificado parcialmente
+1000,base,4000,Pro,50,600,Starter,48.0,LLM de voz no cuantificado; minuto extra 0.08 USD verificado parcialmente
+1000,alto,6000,Pro,50,1500,Pro,119.96,LLM de voz no cuantificado; minuto extra 0.08 USD verificado parcialmente
+10000,base,40000,Business (autoalojado),667,6000,Pro,479.96,LLM de voz no cuantificado; minuto extra 0.08 USD verificado parcialmente
+10000,alto,60000,Business (autoalojado),667,15000,Pro,1199.96,LLM de voz no cuantificado; minuto extra 0.08 USD verificado parcialmente
