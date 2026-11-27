@@ -23,4 +23,4 @@ fecha,caso_id,llamada_id,etapa,agente,proveedor,modelo,tokens_entrada,tokens_sal
 2026-11-26T22:04:00Z,PED-0007,L-022,agentes,A3,n8n Cloud,determinista (sin LLM),NA,NA,NA,NA,funcion,0,0,USD,ok,1,medido (ejecución n8n)
 2026-11-26T22:04:00Z,PED-0007,L-023,revision,A4,n8n Cloud,determinista (sin LLM),NA,NA,NA,NA,regla,0,0,USD,ok,1,medido (ejecución n8n)
 2026-11-26,DESARROLLO,L-DEV,diseno_construccion,asistente de desarrollo (Claude),Anthropic,Claude Sonnet 5.5,NA,NA,NA,NA,sesion,NA,NA,USD,ok,0,estimado: tokens no reportados al usuario; subtotal de inversión separado
-2026-11-26,PED-0001,L-VOZ,elevenlabs,voz,ElevenLabs,agente voz,NA,NA,NA,NA,minuto,NA,NA,USD,pendiente,0,pendiente: conversación de voz aún no ejecutada
+2026-11-26,PED-0008,L-VOZ,elevenlabs,voz,ElevenLabs,agente voz,NA,NA,NA,NA,minuto,NA,NA,USD,ok,0,estimado: conversación de prueba en texto; minutos y cargo reales a leer en el panel de uso de ElevenLabs (no reportado a la sesión)

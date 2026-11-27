@@ -109,7 +109,7 @@ if (j.message || j.edited_message){ // ---- Telegram
   const sec = j.headers['x-tool-secret'] || ''; const b = j.body || {};
   if (H(sec) !== TOOL_HASH){ traza('N/A', 'ORQ', 'bloqueado', {motivo: 'herramienta_sin_autorizacion'}); out.push({json: {canal: 'voz', ok: false, motivo: 'no autorizado'}}); }
   else {
-    expirar(); const acc = String(b.accion || '').toLowerCase();
+    expirar(); const acc = String(b.accion || b['acción'] || b.action || (b.folio ? 'consultar' : (b.cliente ? 'crear' : ''))).toLowerCase().trim().replace(/^consul\w*/,'consultar').replace(/^cre\w*/,'crear');
     if (acc === 'consultar'){ const id = String(b.folio || '').toUpperCase(); const c = sd.casos[id];
       out.push({json: {canal: 'voz', ok: !!c, folio: id, estado: c ? c.estado : null, total: c && c.resultado ? c.resultado.total : null, mensaje: c ? `El pedido ${id} está ${c.estado.replace(/_/g,' ')} (resultado simulado)` : 'Folio inexistente. No tengo registro de ese folio.'}}); }
     else if (acc === 'crear'){ const texto = `cliente: ${b.cliente || ''}, producto: ${b.producto || ''}, cantidad: ${b.cantidad || ''}, zona: ${b.zona || ''}, fecha: ${b.fecha || ''}`.replace(/(cliente|producto|cantidad|zona|fecha): ,?/g, '').trim();

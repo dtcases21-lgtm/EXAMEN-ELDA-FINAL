@@ -86,6 +86,36 @@
    "entrada": "/start",
    "salida": "ayuda",
    "estado": "success"
+  },
+  {
+   "ejecucion": "16-18",
+   "entrada": "voz: consulta con accion mal escrita (consultarr) y variante con acento",
+   "salida": "accion no soportada -> webhook hecho tolerante a variantes y republicado",
+   "estado": "fallido-corregido"
+  },
+  {
+   "ejecucion": 19,
+   "entrada": "voz: consultar PED-0001",
+   "salida": "El pedido PED-0001 está confirmado (resultado simulado)",
+   "estado": "success"
+  },
+  {
+   "ejecucion": 20,
+   "entrada": "voz: crear pedido (PED-0008)",
+   "salida": "total 1079.08; aviso de aprobación enviado a Telegram",
+   "estado": "success"
+  },
+  {
+   "ejecucion": 22,
+   "entrada": "voz: consultar PED-9999",
+   "salida": "Folio inexistente (el agente lo reconoce)",
+   "estado": "success"
+  },
+  {
+   "ejecucion": "23",
+   "entrada": "Telegram: /aprobar PED-0008 2 (pedido creado por voz)",
+   "salida": "Pedido PED-0008 confirmado (resultado simulado)",
+   "estado": "success"
   }
  ]
 }

@@ -1,9 +1,9 @@
 {
  "empresa": "AguaClara Distribuciones (ficticia)",
  "proposito": "Registro de pedidos de agua embotellada",
- "fuente": "Registro de casos en n8n (ejecuciones de producción 4-15, exportación sanitizada)",
+ "fuente": "Registro de casos en n8n (ejecuciones de producción 4-22, exportación sanitizada)",
  "periodo": "Nov 2026 (datos de prueba)",
- "actualizado": "2026-11-26T20:18:49+00:00",
+ "actualizado": "2026-11-27T03:27:00+00:00",
  "ficticio": true,
  "moneda": "MXN",
  "pedidos": [
@@ -96,6 +96,19 @@
    "total": 1302.68,
    "descuento_pct": 0.05,
    "correccion": true,
+   "costo_usd": 0
+  },
+  {
+   "caso_id": "PED-0008",
+   "canal": "voz",
+   "estado": "confirmado",
+   "fecha": "2026-11-26",
+   "sku": "BOT600",
+   "zona": "NORTE",
+   "cantidad": 12,
+   "total": 1079.08,
+   "descuento_pct": 0.02,
+   "correccion": false,
    "costo_usd": 0
   }
  ]
