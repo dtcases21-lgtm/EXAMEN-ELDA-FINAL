@@ -4,56 +4,96 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AguaClara · Registro de pedidos (datos ficticios)</title>
+<meta name="description" content="Panel de pedidos de AguaClara, empresa ficticia: indicadores, historial, simulador y asistente de voz con IA.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip" href="#principal">Saltar al contenido</a>
-<header>
-  <h1>AguaClara Distribuciones</h1>
-  <p class="badge" role="note">Datos ficticios · resultado simulado</p>
-  <dl class="meta">
-    <div><dt>Propósito</dt><dd id="m-proposito">—</dd></div>
-    <div><dt>Periodo</dt><dd id="m-periodo">—</dd></div>
-    <div><dt>Fuente</dt><dd id="m-fuente">—</dd></div>
-    <div><dt>Actualizado</dt><dd id="m-actualizado">—</dd></div>
-  </dl>
+<header class="hero">
+  <div class="gotas" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="wrap">
+    <p class="eyebrow">AI Tools · Proyecto final</p>
+    <h1>Aqua<span>Clara</span> <small>Distribuciones</small></h1>
+    <p class="lead">Registro de pedidos de agua embotellada con un orquestador, cuatro agentes, Telegram y voz. Cada pedido se valida, se calcula, se revisa y lo aprueba una persona.</p>
+    <p class="badge" role="note"><span aria-hidden="true">◆</span> Datos ficticios · resultado simulado</p>
+    <dl class="meta">
+      <div><dt>Propósito</dt><dd id="m-proposito">—</dd></div>
+      <div><dt>Periodo</dt><dd id="m-periodo">—</dd></div>
+      <div><dt>Fuente</dt><dd id="m-fuente">—</dd></div>
+      <div><dt>Actualizado</dt><dd id="m-actualizado">—</dd></div>
+    </dl>
+    <nav class="nav" aria-label="Secciones"><a href="#sec-kpi">Indicadores</a><a href="#sec-graf">Estados</a><a href="#sec-sim">Simulador</a><a href="#sec-hist">Historial</a><a href="#sec-voz">Voz</a></nav>
+  </div>
 </header>
-<main id="principal">
+<main id="principal" class="wrap">
   <div id="estado" role="status" aria-live="polite">Cargando datos…</div>
+
   <section aria-labelledby="h-kpi" id="sec-kpi" hidden>
     <h2 id="h-kpi">Indicadores</h2>
     <div class="kpis">
-      <article class="kpi"><h3>Tasa de pedidos confirmados</h3><p class="v" id="k1">—</p><p class="f">confirmados ÷ pedidos con propuesta liberada × 100 · % · periodo del panel · fuente: registro de casos · <b>medido</b></p></article>
-      <article class="kpi"><h3>Pedidos liberados sin corrección</h3><p class="v" id="k2">—</p><p class="f">pedidos sin devolución del revisor ÷ pedidos procesados × 100 · % · fuente: trazas · <b>medido</b></p></article>
-      <article class="kpi"><h3>Costo variable por pedido</h3><p class="v" id="k3">—</p><p class="f">suma de costos variables ÷ pedidos completados · USD/pedido · fuente: costos.csv · <b>medido</b>; meta esperada: ≤ 0.01 USD</p></article>
+      <article class="kpi k-a"><h3>Pedidos confirmados</h3><p class="v"><span id="k1" data-fin="0">—</span></p><div class="bar" aria-hidden="true"><i id="b1"></i></div><p class="f">confirmados ÷ pedidos con propuesta liberada × 100 · % · noviembre 2026 · registro de casos · <b>medido</b></p></article>
+      <article class="kpi k-b"><h3>Liberados sin corrección</h3><p class="v"><span id="k2">—</span></p><div class="bar" aria-hidden="true"><i id="b2"></i></div><p class="f">sin devolución del revisor ÷ procesados × 100 · % · trazas · <b>medido</b></p></article>
+      <article class="kpi k-c"><h3>Costo variable por pedido</h3><p class="v"><span id="k3">—</span></p><div class="bar" aria-hidden="true"><i id="b3"></i></div><p class="f">costos variables ÷ pedidos completados · USD/pedido · costos.csv · <b>medido</b> (agentes sin LLM; voz pendiente del panel del proveedor) · meta esperada ≤ 0.01</p></article>
     </div>
   </section>
+
   <section aria-labelledby="h-graf" id="sec-graf" hidden>
-    <h2 id="h-graf">Pedidos por estado</h2>
-    <p>Pregunta: ¿qué proporción de pedidos termina confirmada, rechazada o vencida?</p>
-    <div id="grafica" role="img" aria-label="Barras de pedidos por estado"></div>
-    <table id="t-resumen"><caption>Resumen accesible de la gráfica</caption><thead><tr><th scope="col">Estado</th><th scope="col">Pedidos</th><th scope="col">Porcentaje</th></tr></thead><tbody></tbody></table>
+    <h2 id="h-graf">¿Cómo terminan los pedidos?</h2>
+    <p class="sub">Pregunta: ¿qué proporción termina confirmada, rechazada o vencida? Toca un estado para filtrar el historial.</p>
+    <div class="graf">
+      <figure class="donut-wrap"><svg id="donut" viewBox="0 0 120 120" role="img" aria-label="Gráfica de dona de pedidos por estado"></svg><figcaption id="donut-centro"><b id="d-total">0</b><span>pedidos</span></figcaption></figure>
+      <div class="graf-lado">
+        <ul id="leyenda" class="leyenda"></ul>
+        <table id="t-resumen"><caption>Resumen accesible de la gráfica</caption><thead><tr><th scope="col">Estado</th><th scope="col">Pedidos</th><th scope="col">Porcentaje</th></tr></thead><tbody></tbody></table>
+      </div>
+    </div>
   </section>
+
+  <section aria-labelledby="h-sim" id="sec-sim">
+    <h2 id="h-sim">Simulador de pedido</h2>
+    <p class="sub">Aplica las mismas reglas que los agentes: descuento por volumen con tope, IVA 16 % (supuesto), envío por zona. Es una simulación; no crea pedidos.</p>
+    <div class="sim">
+      <form id="f-sim" class="sim-form" autocomplete="off">
+        <label>Producto <select id="s-prod"></select></label>
+        <label>Cantidad <input id="s-cant" type="number" min="1" max="500" value="30" inputmode="numeric"></label>
+        <label>Zona <select id="s-zona"></select></label>
+        <label>Fecha <input id="s-fecha" type="date"></label>
+        <label>Cliente (ficticio) <input id="s-cli" type="text" value="Cafe Luna" maxlength="40"></label>
+      </form>
+      <div class="sim-res" aria-live="polite">
+        <p id="s-aviso" class="aviso" hidden></p>
+        <dl id="s-desglose"></dl>
+        <p class="tot"><span>Total simulado</span><b id="s-total">—</b></p>
+        <div class="dscto"><span id="s-dtxt">Descuento</span><div class="bar"><i id="s-dbar"></i></div></div>
+        <button type="button" id="s-copiar" class="btn">Copiar comando para Telegram</button>
+        <p id="s-ok" class="ok" role="status"></p>
+        <code id="s-cmd" class="cmd">/nuevo …</code>
+      </div>
+    </div>
+  </section>
+
   <section aria-labelledby="h-hist" id="sec-hist" hidden>
     <h2 id="h-hist">Historial de pedidos</h2>
     <form id="filtros" class="filtros">
       <label>Estado <select id="f-estado"><option value="">Todos</option></select></label>
       <label>Canal <select id="f-canal"><option value="">Todos</option></select></label>
       <label>Folio <input id="f-folio" type="search" placeholder="PED-0001"></label>
-      <button type="reset" id="reset">Restablecer</button>
+      <button type="reset" id="reset" class="btn ghost">Restablecer</button>
     </form>
+    <p id="cuenta" class="sub" aria-live="polite"></p>
     <p id="sin-resultados" hidden>Sin resultados con estos filtros.</p>
     <div class="tabla-wrap"><table id="t-hist"><caption>Pedidos (sin datos personales)</caption>
       <thead><tr><th scope="col">Folio</th><th scope="col">Fecha</th><th scope="col">Canal</th><th scope="col">Estado</th><th scope="col">Producto</th><th scope="col">Zona</th><th scope="col">Cant.</th><th scope="col">Total MXN</th></tr></thead><tbody></tbody></table></div>
   </section>
-  <section aria-labelledby="h-voz">
-    <h2 id="h-voz">Asistente de voz (IA)</h2>
-    <p>Habla con el asistente de voz para consultar o crear un pedido de prueba. Es una IA y te pedirá tu consentimiento antes de empezar. Usa solo datos ficticios.</p>
-    <elevenlabs-convai agent-id="agent_0801m8b8gttrf6mv2nrhaf38rnfc"></elevenlabs-convai>
-    <p id="voz-alt" class="alt" hidden>La voz no está disponible (micrófono denegado o servicio caído). Alternativa: escribe <b>/nuevo</b> o <b>/estado PED-0001</b> al bot de Telegram <b>@jimenoidebot</b>.</p>
+
+  <section aria-labelledby="h-voz" id="sec-voz" class="voz">
+    <h2 id="h-voz">Habla con el asistente (IA)</h2>
+    <p>Es un asistente de inteligencia artificial: te pedirá tu consentimiento antes de empezar. Pídele consultar un folio (por ejemplo <b>PED-0001</b>) o crear un pedido de prueba. Usa solo datos ficticios.</p>
+    <div class="voz-caja"><elevenlabs-convai agent-id="agent_0801m8b8gttrf6mv2nrhaf38rnfc"></elevenlabs-convai></div>
+    <p id="voz-alt" class="aviso" hidden>La voz no está disponible (micrófono denegado o servicio caído). Alternativa: escribe <b>/nuevo</b> o <b>/estado PED-0001</b> al bot de Telegram <b>@jimenoidebot</b>.</p>
   </section>
 </main>
-<footer><p>Proyecto académico · AI Tools · Todos los datos son ficticios y toda salida de negocio es un resultado simulado.</p></footer>
+<footer><div class="wrap"><p>Proyecto académico · AI Tools · Todos los datos son ficticios y toda salida de negocio es un resultado simulado.</p></div></footer>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 <script src="app.js"></script>
 </body>
