@@ -116,6 +116,18 @@
    "entrada": "Telegram: /aprobar PED-0008 2 (pedido creado por voz)",
    "salida": "Pedido PED-0008 confirmado (resultado simulado)",
    "estado": "success"
+  },
+  {
+   "ejecucion": 24,
+   "entrada": "voz: consultar con el secreto anterior (tras rotación)",
+   "salida": "no autorizado",
+   "estado": "success (bloqueo esperado)"
+  },
+  {
+   "ejecucion": 25,
+   "entrada": "voz: consultar PED-0008 con el secreto nuevo",
+   "salida": "El pedido PED-0008 está confirmado (resultado simulado)",
+   "estado": "success"
   }
  ]
 }
