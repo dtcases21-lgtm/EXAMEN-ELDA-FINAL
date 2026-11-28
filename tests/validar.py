@@ -12,8 +12,10 @@ try:
     if d.get("ficticio") is not True: errs.append("falta rótulo ficticio")
     cat = json.loads((ROOT / "datos/catalogo.json").read_text(encoding="utf-8")); skus = {p["sku"]: p for p in cat["productos"]}; tope = cat["supuestos"]["descuento_tope"]
     for p in d["pedidos"]:
-        for prohibido in ["cliente","nombre","chat_id","texto","telefono"]:
+        for prohibido in ["nombre","chat_id","texto","telefono","correo","email"]:
             if prohibido in p: errs.append(f"{p.get('caso_id')}: campo privado '{prohibido}' en datos públicos")
+        cl = p.get("cliente")
+        if cl is not None and (len(cl) > 40 or "@" in cl or re.search(r"\d{7,}", cl) or re.search(r"https?:", cl)): errs.append(f"{p.get('caso_id')}: cliente no parece un alias ficticio")
         if p.get("descuento_pct") is not None and p["descuento_pct"] > tope + 1e-9: errs.append(f"{p['caso_id']}: descuento sobre tope")
         if p.get("estado") == "confirmado" and p.get("total") is not None and p["total"] <= 0: errs.append(f"{p['caso_id']}: total inválido")
         if p.get("sku") and p["sku"] not in skus: errs.append(f"{p['caso_id']}: sku desconocido")

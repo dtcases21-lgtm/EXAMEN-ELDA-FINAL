@@ -101,3 +101,5 @@ footer{background:#0b1b3a;color:#bcd4ff;padding:18px 0;font-size:.85rem}footer p
 .zops li b{display:block;color:var(--a2)}.zops li.alerta b{color:#be185d}
 .zt{margin-top:14px}
 @media(max-width:760px){.zonas{grid-template-columns:1fr}.zrow{grid-template-columns:70px 1fr 84px}}
+
+.zcli{margin-top:16px}.zcli .zrow{grid-template-columns:150px 1fr 96px}@media(max-width:760px){.zcli .zrow{grid-template-columns:96px 1fr 84px}}

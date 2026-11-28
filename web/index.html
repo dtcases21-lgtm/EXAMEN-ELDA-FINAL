@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AguaClara · Registro de pedidos (datos ficticios)</title>
 <meta name="description" content="Panel de pedidos de AguaClara, empresa ficticia: indicadores, historial, simulador y asistente de voz con IA.">
-<link rel="stylesheet" href="styles.css?v=6">
+<link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 <a class="skip" href="#principal">Saltar al contenido</a>
@@ -57,8 +57,9 @@
         <p class="zleg"><span><i class="zc"></i> Confirmado</span><span><i class="zp"></i> En proceso o perdido</span></p></div>
       <div class="zcard"><h3>Oportunidades</h3><ul id="zops" class="zops"></ul></div>
     </div>
+    <div class="zcard zcli"><h3>Clientes con más venta confirmada</h3><div id="cbars" class="zbars"></div><p class="zleg">Nombres ficticios (alias). Total en MXN.</p></div>
     <div class="tabla-wrap zt"><table id="t-zonas"><caption>Resumen por zona</caption>
-      <thead><tr><th scope="col">Zona</th><th scope="col">Pedidos</th><th scope="col">Confirmados</th><th scope="col">Venta confirmada</th><th scope="col">En proceso</th><th scope="col">Perdido</th><th scope="col">% confirmación</th></tr></thead><tbody></tbody></table></div>
+      <thead><tr><th scope="col">Zona</th><th scope="col">Clientes</th><th scope="col">Pedidos</th><th scope="col">Confirmados</th><th scope="col">Venta confirmada</th><th scope="col">En proceso</th><th scope="col">Perdido</th><th scope="col">% confirmación</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section aria-labelledby="h-sim" id="sec-sim">
@@ -89,13 +90,13 @@
     <form id="filtros" class="filtros">
       <label>Estado <select id="f-estado"><option value="">Todos</option></select></label>
       <label>Canal <select id="f-canal"><option value="">Todos</option></select></label>
-      <label>Folio <input id="f-folio" type="search" placeholder="PED-0001"></label>
+      <label>Folio o cliente <input id="f-folio" type="search" placeholder="PED-0001 o cliente"></label>
       <button type="reset" id="reset" class="btn ghost">Restablecer</button>
     </form>
     <p id="cuenta" class="sub" aria-live="polite"></p>
     <p id="sin-resultados" hidden>Sin resultados con estos filtros.</p>
-    <div class="tabla-wrap"><table id="t-hist"><caption>Pedidos (sin datos personales)</caption>
-      <thead><tr><th scope="col">Folio</th><th scope="col">Fecha</th><th scope="col">Canal</th><th scope="col">Estado</th><th scope="col">Producto</th><th scope="col">Zona</th><th scope="col">Cant.</th><th scope="col">Total MXN</th></tr></thead><tbody></tbody></table></div>
+    <div class="tabla-wrap"><table id="t-hist"><caption>Pedidos (clientes ficticios, solo alias)</caption>
+      <thead><tr><th scope="col">Folio</th><th scope="col">Fecha</th><th scope="col">Canal</th><th scope="col">Cliente</th><th scope="col">Estado</th><th scope="col">Producto</th><th scope="col">Zona</th><th scope="col">Cant.</th><th scope="col">Total MXN</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section aria-labelledby="h-voz" id="sec-voz" class="voz">
@@ -107,6 +108,6 @@
 </main>
 <footer><div class="wrap"><p>Proyecto académico · AI Tools · Todos los datos son ficticios y toda salida de negocio es un resultado simulado.</p></div></footer>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-<script src="app.js?v=6"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

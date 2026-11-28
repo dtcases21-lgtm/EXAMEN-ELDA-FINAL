@@ -34,3 +34,5 @@ Estado de componentes e índice de evidencias: `evidencias/indice.md`.
 
 ## Datos en vivo del sitio
 El sitio consulta `GET /webhook/aguaclara-publico` (n8n, solo lectura, sin cliente ni chat_id) al cargar y cada 20 s. Si falla, usa la exportación estática `web/data/pedidos.json`.
+
+**Nombres de cliente:** el sitio y el endpoint público muestran solo alias ficticios (por ejemplo "Cafe Luna"). No se publican datos de contacto ni identificadores de chat.
