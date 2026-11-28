@@ -24,7 +24,7 @@ function render(d){
   var edad=(Date.now()-new Date(d.actualizado).getTime())/864e5;
   estado(edad>MAX_DIAS?"Datos desactualizados: última actualización hace "+Math.floor(edad)+" días.":"",edad>MAX_DIAS?"aviso":"");
   ["sec-kpi","sec-graf","sec-hist"].forEach(function(i){$(i).hidden=false});
-  kpis();dona();filtros();tabla();
+  kpis();dona();zonas();filtros();tabla();
 }
 function kpis(){
   var lib=DATOS.filter(function(p){return ORDEN.indexOf(p.estado)>-1&&p.estado!=="aclaracion"}),
@@ -85,6 +85,39 @@ function tabla(){
     });
   });
 }
+/* zonas */
+function zonas(){
+  var sec=$("sec-zonas");if(!DATOS.length)return;
+  var Z={},cob={};
+  if(CAT)CAT.zonas.forEach(function(z){Z[z.zona]=1;cob[z.zona]=z.cobertura});
+  DATOS.forEach(function(p){if(p.zona)Z[p.zona]=1});
+  var M=Object.keys(Z).sort().map(function(k){return {z:k,n:0,c:0,dec:0,venta:0,proc:0,perd:0,sinc:0}});
+  var idx={};M.forEach(function(m){idx[m.z]=m});
+  DATOS.forEach(function(p){var m=idx[p.zona];if(!m)return;m.n++;var t=p.total;
+    if(p.estado==="confirmado"){m.c++;m.dec++;m.venta+=t||0}
+    else if(p.estado==="pendiente_aprobacion"){m.proc+=t||0}
+    else if(p.estado==="rechazado"||p.estado==="vencido"){m.dec++;m.perd+=t||0;if(t==null)m.sinc++}});
+  M.sort(function(a,b){return b.venta-a.venta||b.n-a.n||a.z.localeCompare(b.z)});
+  var max=Math.max.apply(null,M.map(function(m){return m.venta+m.proc+m.perd}).concat([1])),tv=M.reduce(function(a,m){return a+m.venta},0);
+  var bars=$("zbars");bars.textContent="";var tb=$("t-zonas").tBodies[0];tb.textContent="";
+  M.forEach(function(m){
+    var row=el("div","zrow"),tr=el("div","ztrack"),a=el("i","zc"),b=el("i","zp");
+    row.append(el("b",null,m.z));tr.append(a,b);row.append(tr,el("span","val",m.venta+m.proc+m.perd?mxn(m.venta):(m.n?"sin valor":"sin pedidos")));bars.append(row);
+    setTimeout(function(){a.style.width=(m.venta/max*100)+"%";b.style.width=((m.proc+m.perd)/max*100)+"%"},60);
+    var r=tb.insertRow();[m.z,m.n,m.c,mxn(m.venta),mxn(m.proc),mxn(m.perd),m.dec?pct(m.c,m.dec)+" %":"—"].forEach(function(v){r.insertCell().textContent=v});
+  });
+  var ops=[],top=M[0];
+  if(top&&top.venta>0)ops.push(["Mejor zona: "+top.z,top.z+" aporta "+mxn(top.venta)+" ("+pct(top.venta,tv)+" % de la venta confirmada). Mantener el servicio y replicar lo que funciona.",0]);
+  M.forEach(function(m){if(cob[m.z]===false&&m.n>0)ops.push(["Demanda sin cobertura: "+m.z,m.n+" pedido(s) rechazado(s) por falta de cobertura. Evaluar ampliar la distribución.",1])});
+  M.forEach(function(m){if(cob[m.z]!==false&&m.venta===0)ops.push(["Sin venta confirmada: "+m.z,(m.n?"Tiene pedidos, pero ninguno confirmado. Revisar por qué no se cerraron.":"Zona con cobertura y sin pedidos. Oportunidad de prospección con distribuidores."),0])});
+  M.forEach(function(m){if(m.proc>0)ops.push(["Por aprobar: "+m.z,mxn(m.proc)+" esperan aprobación. Aprobarlos a tiempo evita que venzan.",1])});
+  M.forEach(function(m){if(cob[m.z]!==false&&m.perd>0)ops.push(["Venta perdida: "+m.z,mxn(m.perd)+" en pedidos rechazados o vencidos. Dar seguimiento a la aprobación.",1])});
+  var ul=$("zops");ul.textContent="";
+  ops.slice(0,5).forEach(function(o){var li=el("li",o[2]?"alerta":"");li.append(el("b",null,o[0]),document.createTextNode(o[1]));ul.append(li)});
+  if(!ops.length)ul.append(el("li",null,"Sin oportunidades detectadas con estos datos."));
+  var sz=DATOS.filter(function(p){return !p.zona}).length;txt($("t-zonas").caption,"Resumen por zona"+(sz?" ("+sz+" pedido(s) sin zona identificada, rechazados o en aclaración antes de cotizar, no se incluyen)":""));
+  sec.hidden=false;
+}
 /* simulador */
 function sim(){
   if(!CAT)return;
@@ -125,6 +158,7 @@ function iniciaSim(c){
     else listo("Copia manual: selecciona el comando de abajo.");
   });
   sim();
+  if(DATOS.length)zonas();
 }
 /* voz */
 function voz(){

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AguaClara · Registro de pedidos (datos ficticios)</title>
 <meta name="description" content="Panel de pedidos de AguaClara, empresa ficticia: indicadores, historial, simulador y asistente de voz con IA.">
-<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 <a class="skip" href="#principal">Saltar al contenido</a>
@@ -22,7 +22,7 @@
       <div><dt>Fuente</dt><dd id="m-fuente">—</dd></div>
       <div><dt>Actualizado</dt><dd id="m-actualizado">—</dd></div>
     </dl>
-    <nav class="nav" aria-label="Secciones"><a href="#sec-kpi">Indicadores</a><a href="#sec-graf">Estados</a><a href="#sec-sim">Simulador</a><a href="#sec-hist">Historial</a><a href="#sec-voz">Voz</a></nav>
+    <nav class="nav" aria-label="Secciones"><a href="#sec-kpi">Indicadores</a><a href="#sec-graf">Estados</a><a href="#sec-zonas">Zonas</a><a href="#sec-sim">Simulador</a><a href="#sec-hist">Historial</a><a href="#sec-voz">Voz</a></nav>
   </div>
 </header>
 <main id="principal" class="wrap">
@@ -47,6 +47,18 @@
         <table id="t-resumen"><caption>Resumen accesible de la gráfica</caption><thead><tr><th scope="col">Estado</th><th scope="col">Pedidos</th><th scope="col">Porcentaje</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
+  </section>
+
+  <section aria-labelledby="h-zonas" id="sec-zonas" hidden>
+    <h2 id="h-zonas">Ventas por zona</h2>
+    <p class="sub">Pregunta: ¿qué regiones rinden más y dónde hay oportunidad? Azul: venta confirmada (MXN). Rosa: valor en proceso o perdido (rechazado o vencido). Son datos de prueba.</p>
+    <div class="zonas">
+      <div class="zcard"><h3>Desempeño por zona</h3><div id="zbars" class="zbars"></div>
+        <p class="zleg"><span><i class="zc"></i> Confirmado</span><span><i class="zp"></i> En proceso o perdido</span></p></div>
+      <div class="zcard"><h3>Oportunidades</h3><ul id="zops" class="zops"></ul></div>
+    </div>
+    <div class="tabla-wrap zt"><table id="t-zonas"><caption>Resumen por zona</caption>
+      <thead><tr><th scope="col">Zona</th><th scope="col">Pedidos</th><th scope="col">Confirmados</th><th scope="col">Venta confirmada</th><th scope="col">En proceso</th><th scope="col">Perdido</th><th scope="col">% confirmación</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <section aria-labelledby="h-sim" id="sec-sim">
@@ -95,6 +107,6 @@
 </main>
 <footer><div class="wrap"><p>Proyecto académico · AI Tools · Todos los datos son ficticios y toda salida de negocio es un resultado simulado.</p></div></footer>
 <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=6"></script>
 </body>
 </html>
