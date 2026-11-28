@@ -168,6 +168,35 @@
     300,
     480
    ]
+  },
+  {
+   "parameters": {
+    "httpMethod": "GET",
+    "path": "aguaclara-publico",
+    "responseMode": "lastNode",
+    "options": {
+     "allowedOrigins": "https://dtcases21-lgtm.github.io"
+    }
+   },
+   "name": "Webhook Publico",
+   "type": "n8n-nodes-base.webhook",
+   "typeVersion": 2,
+   "position": [
+    0,
+    720
+   ]
+  },
+  {
+   "parameters": {
+    "jsCode": "const sd = $getWorkflowStaticData('global');\nconst casos = sd.casos || {};\nconst ahora = Date.now();\nconst pedidos = Object.keys(casos).sort().map(id => {\n  const c = casos[id], r = c.resultado || {};\n  let est = c.estado;\n  if (est === 'pendiente_aprobacion' && c.expira && new Date(c.expira).getTime() <= ahora) est = 'vencido';\n  return { caso_id: id, canal: c.canal, estado: est, fecha: String(c.creado || '').slice(0, 10), sku: r.sku || null, zona: r.zona || null, cantidad: (r.cantidad === undefined ? null : r.cantidad), total: (r.total === undefined ? null : r.total), descuento_pct: (r.descuento_pct === undefined ? null : r.descuento_pct), correccion: !!c.correccion, costo_usd: 0 };\n});\nreturn [{ json: { ok: true, actualizado: new Date().toISOString(), pedidos } }];"
+   },
+   "name": "Datos publicos",
+   "type": "n8n-nodes-base.code",
+   "typeVersion": 2,
+   "position": [
+    304,
+    720
+   ]
   }
  ],
  "connections": {
@@ -239,6 +268,17 @@
     [
      {
       "node": "Exportar sanitizado",
+      "type": "main",
+      "index": 0
+     }
+    ]
+   ]
+  },
+  "Webhook Publico": {
+   "main": [
+    [
+     {
+      "node": "Datos publicos",
       "type": "main",
       "index": 0
      }

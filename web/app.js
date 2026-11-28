@@ -140,7 +140,17 @@ function reveal(){
   els.forEach(function(s){s.classList.add("rev");io.observe(s)});
 }
 function json(u){return fetch(u,{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
-json("data/pedidos.json").then(render).catch(function(){estado("No se pudieron cargar los datos. Recarga la página; si persiste, el sitio puede estar en mantenimiento.","error")});
+var API="https://jimenoidee.app.n8n.cloud/webhook/aguaclara-publico",BASE=null,ULT="";
+function conTiempo(u,ms){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms);return fetch(u,{cache:"no-store",signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw new Error(r.status);return r.json()})}
+function aplicar(d,vivo){
+  var firma=JSON.stringify(d.pedidos);if(firma===ULT)return;ULT=firma;
+  var f=Object.assign({},FILTRO);
+  if(BASE){d=Object.assign({},BASE,{pedidos:d.pedidos,actualizado:d.actualizado||BASE.actualizado,fuente:vivo?"En vivo desde el registro de n8n (sanitizado, se actualiza solo)":BASE.fuente})}
+  render(d);FILTRO=f;$("f-estado").value=f.estado;$("f-canal").value=f.canal;$("f-folio").value=f.folio;sync();tabla();
+}
+function vivo(){return conTiempo(API,8000).then(function(d){if(!d||!d.ok||!Array.isArray(d.pedidos))throw new Error("formato");aplicar(d,true)})}
+conTiempo("data/pedidos.json",10000).then(function(d){BASE=d;return vivo().catch(function(){aplicar(d,false)})}).catch(function(){estado("No se pudieron cargar los datos. Recarga la página; si persiste, el sitio puede estar en mantenimiento.","error")});
+setInterval(function(){if(!document.hidden&&BASE)vivo().catch(function(){})},20000);
 json("data/catalogo.json").then(iniciaSim).catch(function(){var a=$("s-aviso");txt(a,"Simulador no disponible: no se cargó el catálogo.");a.hidden=false});
 voz();reveal();
 })();

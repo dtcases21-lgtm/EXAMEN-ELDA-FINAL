@@ -31,3 +31,6 @@ En Telegram: `/nuevo cliente: Cafe Luna, producto: garrafon 20, cantidad: 30, zo
 Telegram no responde: workflow publicado y un solo receptor. Error 400 de Telegram: `parse_mode` HTML. Pages sin cambios: revisar la corrida de Actions. Voz sin respuesta: revisar secreto y URL de producción del webhook.
 
 Estado de componentes e índice de evidencias: `evidencias/indice.md`.
+
+## Datos en vivo del sitio
+El sitio consulta `GET /webhook/aguaclara-publico` (n8n, solo lectura, sin cliente ni chat_id) al cargar y cada 20 s. Si falla, usa la exportación estática `web/data/pedidos.json`.
